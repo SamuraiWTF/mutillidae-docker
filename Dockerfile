@@ -46,7 +46,7 @@ RUN sed -ri 's/PermitRootLogin without-password/PermitRootLogin yes/g' /etc/ssh/
 RUN sed -ri 's/root\:\*/root\:\$1\$xampp\$5\/7SXMYAMmS68bAy94B5f\./g' /etc/shadow
 
 # Few handy utilities which are nice to have
-RUN apt-get -y install nano vim less --no-install-recommends
+RUN apt-get -y install nano vim less git --no-install-recommends
 
 RUN apt-get clean
 VOLUME [ "/var/log/mysql/", "/var/log/apache2/" ]
@@ -59,7 +59,12 @@ EXPOSE 80
 RUN echo '/opt/lampp/lampp start' >> /startup.sh
 RUN echo '/usr/bin/supervisord -n' >> /startup.sh
 
-# mount the mutillidae app to www
-ADD ./mutillidae /www
+# MUTILLIDAE SETUP ====
+# clone current upstream mutillidae
+RUN git clone git://git.code.sf.net/p/mutillidae/git mutillidae-git
+# put the mutillidae src into www
+RUN cp -r mutillidae-git/* /www
+# clean up
+RUN rm -rf mutillidae-git/
 
 CMD ["sh", "/startup.sh"]
