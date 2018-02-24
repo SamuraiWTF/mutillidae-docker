@@ -63,6 +63,8 @@ RUN rm -rf mutillidae-git/.settings/
 RUN cp -r mutillidae-git/. /opt/lampp/htdocs/
 # TEMP: fix the include in MySQLHandler.php
 RUN sed -ri 's/includes\/database-config.php/\/opt\/lampp\/htdocs\/includes\/database-config.php/g' /opt/lampp/htdocs/classes/MySQLHandler.php
+# change the htaccess to allow the host VM to access, this has to be done since mutillidae is running in a docker container.
+RUN sed -ri 's/Deny from all/Allow from all/g' /opt/lampp/htdocs/.htaccess
 # clean up
 RUN rm -rf mutillidae-git/
 
