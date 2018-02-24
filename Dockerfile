@@ -21,11 +21,6 @@ RUN sed -i.bak s'/Require local/Require all granted/g' /opt/lampp/etc/extra/http
 RUN mkdir /opt/lampp/apache2/conf.d && \
     echo "IncludeOptional /opt/lampp/apache2/conf.d/*.conf" >> /opt/lampp/etc/httpd.conf
 
-# Create a /www folder and a symbolic link to it in /opt/lampp/htdocs. It'll be accessible via http://localhost:[port]/www/
-# This is convenient because it doesn't interfere with xampp, phpmyadmin or other tools in /opt/lampp/htdocs
-RUN mkdir /www
-RUN ln -s /www /opt/lampp/htdocs/
-
 # SSH server
 RUN apt-get install -y -q supervisor openssh-server
 RUN mkdir -p /var/run/sshd
@@ -63,8 +58,14 @@ RUN echo '/usr/bin/supervisord -n' >> /startup.sh
 # clone current upstream mutillidae
 RUN git clone git://git.code.sf.net/p/mutillidae/git mutillidae-git
 # put the mutillidae src into www
-RUN cp -r mutillidae-git/* /www
+RUN rm -rf /opt/lampp/htdocs/*
+RUN rm -rf mutillidae-git/.settings/
+RUN cp -r mutillidae-git/. /opt/lampp/htdocs/
+# TEMP: fix the include in MySQLHandler.php
+RUN sed -ri 's/includes\/database-config.php/\/opt\/lampp\/htdocs\/includes\/database-config.php/g' /opt/lampp/htdocs/classes/MySQLHandler.php
 # clean up
 RUN rm -rf mutillidae-git/
 
 CMD ["sh", "/startup.sh"]
+
+# docker run -it -e DOCKER_HOST=$(/sbin/ip route|awk '/default/ { print $3 }')
