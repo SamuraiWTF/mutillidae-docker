@@ -1,7 +1,7 @@
 
 # taken from docker hub - tomski68/xampp
 FROM debian:jessie
-MAINTAINER Tomas Jasek<tomsik68 (at) gmail (dot) com>
+LABEL maintainer='cory(at)secureideas(dot)com'
 
 ENV DEBIAN_FRONTEND noninteractive
 RUN apt-get update --fix-missing
@@ -65,6 +65,8 @@ RUN cp -r mutillidae-git/. /opt/lampp/htdocs/
 RUN sed -ri 's/includes\/database-config.php/\/opt\/lampp\/htdocs\/includes\/database-config.php/g' /opt/lampp/htdocs/classes/MySQLHandler.php
 # change the htaccess to allow the host VM to access, this has to be done since mutillidae is running in a docker container.
 RUN sed -ri 's/Deny from all/Allow from all/g' /opt/lampp/htdocs/.htaccess
+ADD /tmp/config/mutillidae_imgs/ .
+RUN cp mutillidae_imgs/coykillericon-50-38.png /opt/lampp/htdocs/images/
 # clean up
 RUN rm -rf mutillidae-git/
 
