@@ -68,6 +68,8 @@ RUN sed -ri 's/Deny from all/Allow from all/g' /opt/lampp/htdocs/.htaccess
 ADD mutillidae_imgs ./mutillidae_imgs
 RUN ls -a
 RUN cp mutillidae_imgs/coykillericon-50-38.png /opt/lampp/htdocs/images/
+# replace background colors
+RUN cd /opt/lampp/htdocs/ && find . -name '*.php' -type f -exec sed -ri 's/#ccccff/2d2d2d/g' {} \;
 # clean up
 RUN rm -rf mutillidae-git/
 
