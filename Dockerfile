@@ -70,6 +70,8 @@ RUN ls -a
 RUN cp mutillidae_imgs/coykillericon-50-38.png /opt/lampp/htdocs/images/
 # replace background colors
 RUN cd /opt/lampp/htdocs/ && find . -name '*.php' -type f -exec sed -ri 's/#ccccff/2d2d2d/g' {} \;
+# Add the new css global styles file
+COPY mutillidae.css /opt/lampp/htdocs/styles/global-styles.css
 # clean up
 RUN rm -rf mutillidae-git/
 
